@@ -23,7 +23,7 @@
 #define MAX_LONG_LEN	240
 #define DEF_LONG_LEN	15
 
-// number of clipts need to quit or take a long break after
+// number of pomodoros need to quit or take a long break after
 #define DEF_LONG_BREAK_AFTER	4
 #define DEF_QUIT_AFTER		16
 
@@ -69,7 +69,7 @@ typedef struct _clipt_cfg {
 	time_t		current_phase_start;
 	time_t		current_phase_time;
 	unsigned int	current_phase_len;	// in seconds
-	unsigned int	clipts;
+	unsigned int	pomodoros;
 	unsigned char	paused;
 } CLIPT_CFG;
 
@@ -98,9 +98,9 @@ void print_usage(int exit_code)
 		DEF_BREAK_LEN);
 	printf(" -l, --long  minutes	Specifies duration of the long break period in minutes(default: %d)\n",
 		DEF_LONG_LEN);
-	printf(" -a, --long_after clipts	Number of pomodors to run before taking a long break (default: %d)\n",
+	printf(" -a, --long_after pomodoros	Number of pomodors to run before taking a long break (default: %d)\n",
 		DEF_LONG_BREAK_AFTER);
-	printf(" -q, --quit clipts	Number of pomodors to run before quitting(default: %d).\n",
+	printf(" -q, --quit pomodoros	Number of pomodors to run before quitting(default: %d).\n",
 		DEF_QUIT_AFTER);
 	printf(" -r, --run script	Run the specified script after then of each phase (passes two arguments w|b|l and ttyname).\n");
 	printf(" -n, --nodaemon		Do NOT become a daemon (default is to become a daemon)\n");
@@ -238,9 +238,9 @@ void clipt_alarm(int signum)
 		phase = "w";
 		len = cfg.work_len;
 	} else { // END OF WORK_PHASE
-		cfg.clipts++;
-		if (cfg.clipts < cfg.quit_after || cfg.quit_after == 0) { 
-			if (cfg.clipts % cfg.long_break_after == 0) {
+		cfg.pomodoros++;
+		if (cfg.pomodoros < cfg.quit_after || cfg.quit_after == 0) { 
+			if (cfg.pomodoros % cfg.long_break_after == 0) {
 				cfg.current_phase = LONG_BREAK_PHASE;
 				phase = "l";
 				len = cfg.long_break_len;
@@ -313,6 +313,7 @@ int clipt_client(CLIPT_CFG *cfg, char *cmd)
 int clipt_process(CLIPT_CFG *cfg, char *req, char *reply)
 {
 	char *tmp;
+	unsigned min, sec;
 
 	if (!cfg || !req || !reply || !req[0]) {
 		strcpy(reply, RESP_BAD);
@@ -372,13 +373,16 @@ int clipt_process(CLIPT_CFG *cfg, char *req, char *reply)
 		if (!cfg->paused)
 			cfg->current_phase_time = time(NULL);
 
-		snprintf(reply, MAX_PATH, "phase: %s\nstarted: %s\nleft: %ld (s)\npaused: %d\nclipt: %d\n",
+		sec = cfg->current_phase_len - (cfg->current_phase_time - cfg->current_phase_start);
+		min = sec / 60;
+		sec %= 60;
+
+		snprintf(reply, MAX_PATH, "phase: %s\nstarted: %s\nleft: %d:%d\npaused: %d\npomodoros: %d\n",
 					  tmp,
 					  chomp(ctime(&(cfg->current_phase_start))),
-					  cfg->current_phase_len - 
-						(cfg->current_phase_time - cfg->current_phase_start),
+					  min, sec,
 					  cfg->paused,
-					  cfg->clipts);
+					  cfg->pomodoros);
         } else {	
 		strcpy(reply, RESP_BAD);
 		return -1;
@@ -461,7 +465,7 @@ void clipt_init(CLIPT_CFG *cfg)
 	}
 	strncpy(cfg->ttyname, tmp, MAX_PATH);
 	cfg->current_phase = BREAK_PHASE;
-	cfg->clipts = 0;
+	cfg->pomodoros = 0;
 	cfg->paused = 0;
 }
 
@@ -555,6 +559,13 @@ int main(int argc,char *argv[])
 			case 'c':
 				strncpy(cmd, optarg, MAX_CMD_SIZE);
 				cmd[MAX_CMD_SIZE] = '\0';
+				for(n=0; valid_reqs[n]; n++) {
+					if (!strcmp(cmd, valid_reqs[n])) break;
+				}
+				if (!valid_reqs[n]) {
+					fprintf(stderr, "Invalid command '%s'\n", cmd);
+					exit(2);
+				}
 				break;
 			case 'n':
 				cfg.is_daemon = 0;
