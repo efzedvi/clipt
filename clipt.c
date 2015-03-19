@@ -325,16 +325,20 @@ int clipt_process(CLIPT_CFG *cfg, char *req, char *reply)
 	reply[0] = '\0';
 
 	if (strcmp(req, REQ_PAUSE) == 0) {
-		cfg->current_phase_time = time(NULL);
-		cfg->paused = 1;
-		alarm(0);
+		if (!cfg->paused) {
+			cfg->current_phase_time = time(NULL);
+			cfg->paused = 1;
+			alarm(0);
+		}
 	} else if (strcmp(req, REQ_RESUME) == 0) {
-		cfg->current_phase_len = cfg->current_phase_len -
-                       			 (cfg->current_phase_time - cfg->current_phase_start);
-		cfg->paused = 0;
-		cfg->current_phase_start = time(NULL);
-		cfg->current_phase_time = time(NULL);
-		alarm(cfg->current_phase_len);
+		if (cfg->paused) {
+			cfg->current_phase_len = cfg->current_phase_len -
+						 (cfg->current_phase_time - cfg->current_phase_start);
+			cfg->paused = 0;
+			cfg->current_phase_start = time(NULL);
+			cfg->current_phase_time = time(NULL);
+			alarm(cfg->current_phase_len);
+		}
         } else if (strcmp(req, REQ_RESET) == 0) {
 		if (cfg->current_phase == WORK_PHASE) 
  			cfg->current_phase_len = cfg->work_len;
