@@ -1,6 +1,6 @@
 #----- Project dependent macros -----
 
-VERSION = 0.1
+VERSION = 1.0.1
 INSTALL_ROOT=/usr/local
 DEBUG_FLAG = -g
 TARGET = clipt
