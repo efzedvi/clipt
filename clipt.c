@@ -25,15 +25,15 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define QUIT_AFTER	4
 #define	SCRIPT		5
 
-#define MIN_WORK_LEN	1
-#define MAX_WORK_LEN	240
-#define DEF_WORK_LEN	25
-#define MIN_BREAK_LEN	1
-#define MAX_BREAK_LEN	240
-#define DEF_BREAK_LEN	5
-#define MIN_LONG_LEN	1
-#define MAX_LONG_LEN	240
-#define DEF_LONG_LEN	15
+#define WORK_LEN_MIN	1
+#define WORK_LEN_MAX	240
+#define WORK_LEN_DEF	25
+#define BREAK_LEN_MIN	1
+#define BREAK_LEN_MAX	240
+#define BREAK_LEN_DEF	5
+#define LONG_BREAK_LEN_MIN	1
+#define LONG_BREAK_LEN_MAX	240
+#define LONG_BREAK_LEN_DEF	15
 
 // number of pomodoros need to quit or take a long break after
 #define DEF_LONG_BREAK_AFTER	4
@@ -92,7 +92,7 @@ CLIPT_CFG	cfg;
 --------------------------------------------------------------------------------*/
 void print_version(void)
 {
-	printf("CLI Pomodoro Timer, V%s By Faraz.V (faraz@fzv.ca) 2015-03-15\n", VERSION);
+	printf("CLIPT (CLI Pomodoro Timer), V%s By Faraz.V 2015-03-15\n", VERSION);
 }
 
 /*------------------------------------------------------------------------------
@@ -102,23 +102,28 @@ void print_usage(int exit_code)
 {
 	print_version();
 	printf("Usage: %s [options ...] \n\n", PACKAGE);
+
 	printf("Options are:\n\n");
 	
-	printf(" -w, --work  minutes	Specifies duration of work perios in minutes(default: %d)\n",
-		DEF_WORK_LEN);
-	printf(" -b, --break minutes	Specifies duration of break period in minutes(default: %d)\n",
-		DEF_BREAK_LEN);
-	printf(" -l, --long  minutes	Specifies duration of the long break period in minutes(default: %d)\n",
-		DEF_LONG_LEN);
+	printf(" -w, --work  minutes	Specifies duration of work perios in minutes([%d-%d] default: %d)\n",
+		WORK_LEN_MIN, WORK_LEN_MAX, WORK_LEN_DEF);
+	printf(" -b, --break minutes	Specifies duration of break period in minutes([%d-%d] default: %d)\n",
+		BREAK_LEN_MIN, BREAK_LEN_MAX, BREAK_LEN_DEF);
+	printf(" -l, --long  minutes	Specifies duration of the long break period in minutes([%d-%d] default: %d)\n",
+		LONG_BREAK_LEN_MIN, LONG_BREAK_LEN_MAX, LONG_BREAK_LEN_DEF);
 	printf(" -a, --long_after pomodoros	Number of pomodors to run before taking a long break (default: %d)\n",
 		DEF_LONG_BREAK_AFTER);
 	printf(" -q, --quit pomodoros	Number of pomodors to run before quitting(default: %d).\n",
 		DEF_QUIT_AFTER);
-	printf(" -r, --run script	Run the specified script after then of each phase (passes two arguments w|b|l and ttyname).\n");
+	printf(" -r, --run script	Run the specified script after then of each phase\n");
+	printf("			It passes 3 arguments [w|b|l] (short for [work|break|long-break]),\n");
+	printf("			lenght of the pase in minutes, and ttyname.\n");
 	printf(" -n, --nodaemon		Do NOT become a daemon (default is to become a daemon)\n");
 	printf(" -c, --cmd command	Pass command to the running daemon.\n");
 	printf(" -h, --help		Display this.\n");
 	printf(" -v, --version		Display version number.\n\n");
+
+	printf("Pomodoro Technique(R) and Pomodoro(TM) are registered and filed trademarks owned by Francesco Cirillo.\nCLIPT is not affiliated by, associated with nor endorsed by Francesco Cirillo.\n\n");
 
 	exit(exit_code);
 }
@@ -177,7 +182,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 
 	if (rc[WORK]) {
 		n = atoi(rc[WORK]);
-		if (!strnum(rc[WORK]) || n<MIN_WORK_LEN || n>MAX_WORK_LEN) {
+		if (!strnum(rc[WORK]) || n<WORK_LEN_MIN || n>WORK_LEN_MAX) {
 			fprintf(stderr, "Invalid work length '%s' in rc file\n", optarg);
 			exit(2);
 		}
@@ -186,7 +191,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 
 	if (rc[BREAK]) {
 		n = atoi(rc[BREAK]);
-		if (!strnum(rc[BREAK]) || n<MIN_BREAK_LEN || n>MAX_BREAK_LEN) {
+		if (!strnum(rc[BREAK]) || n<BREAK_LEN_MIN || n>BREAK_LEN_MAX) {
 			fprintf(stderr, "Invalid break length '%s' in rc file\n", optarg);
 			exit(2);
 		}
@@ -195,7 +200,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 
 	if (rc[LONG]) {
 		n = atoi(rc[LONG]);
-		if (!strnum(rc[LONG]) || n<MIN_LONG_LEN || n>MAX_LONG_LEN) {
+		if (!strnum(rc[LONG]) || n<LONG_BREAK_LEN_MIN || n>LONG_BREAK_LEN_MAX) {
 			fprintf(stderr, "Invalid long break length '%s' in rc file\n", optarg);
 			exit(2);
 		}
@@ -459,10 +464,10 @@ void clipt_init(CLIPT_CFG *cfg)
 	if (!cfg) return;
 
 	memset(cfg, 0, sizeof(CLIPT_CFG));
-	cfg->work_len  = DEF_WORK_LEN;
-	cfg->break_len = DEF_BREAK_LEN;
-	cfg->long_break_len   = DEF_LONG_LEN; 
-	cfg->long_break_after = DEF_LONG_BREAK_AFTER;
+	cfg->work_len  = WORK_LEN_DEF;
+	cfg->break_len = BREAK_LEN_DEF;
+	cfg->long_break_len   	= LONG_BREAK_LEN_DEF; 
+	cfg->long_break_after 	= DEF_LONG_BREAK_AFTER;
 	cfg->quit_after 	= DEF_QUIT_AFTER;
 
 	cfg->is_daemon = 1; // damon by default
@@ -524,7 +529,7 @@ int main(int argc,char *argv[])
 		switch (next_option) {
 			case 'w':
 				n = atoi(optarg);
-				if (!strnum(optarg) || n<MIN_WORK_LEN || n>MAX_WORK_LEN) {
+				if (!strnum(optarg) || n<WORK_LEN_MIN || n>WORK_LEN_MAX) {
 					fprintf(stderr, "Invalid work length '%s'\n", optarg);
 					exit(2);
 				}
@@ -532,7 +537,7 @@ int main(int argc,char *argv[])
 				break;
 			case 'b':
 				n = atoi(optarg);
-				if (!strnum(optarg) || n<MIN_BREAK_LEN || n>MAX_BREAK_LEN) {
+				if (!strnum(optarg) || n<BREAK_LEN_MIN || n>BREAK_LEN_MAX) {
 					fprintf(stderr, "Invalid break length '%s'\n", optarg);
 					exit(2);
 				}
@@ -540,7 +545,7 @@ int main(int argc,char *argv[])
 				break;
 			case 'l':
 				n = atoi(optarg);
-				if (!strnum(optarg) || n<MIN_LONG_LEN || n>MAX_LONG_LEN) {
+				if (!strnum(optarg) || n<LONG_BREAK_LEN_MIN || n>LONG_BREAK_LEN_MAX) {
 					fprintf(stderr, "Invalid long break length '%s'\n", optarg);
 					exit(2);
 				}
