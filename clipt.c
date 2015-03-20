@@ -371,11 +371,13 @@ int clipt_process(CLIPT_CFG *cfg, char *req, char *reply)
         } else if (strcmp(req, REQ_QUIT) == 0) {
 		shutdown_server(0);
         } else if (strcmp(req, REQ_BREAK) == 0) {
-		cfg->current_phase = WORK_PHASE;
-		raise(SIGALRM);
+		if (cfg->current_phase == WORK_PHASE) {
+			raise(SIGALRM);
+		}
         } else if (strcmp(req, REQ_WORK) == 0) {
-		cfg->current_phase = BREAK_PHASE;
-		raise(SIGALRM);
+		if (cfg->current_phase != WORK_PHASE) {
+			raise(SIGALRM);
+		}
         } else if (strcmp(req, REQ_STATUS) == 0) {
 		switch (cfg->current_phase) {
 			case WORK_PHASE:
