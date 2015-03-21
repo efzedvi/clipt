@@ -37,6 +37,6 @@ else
 	mesg y
 	
 	TXT="----------\n$TXT\n----------";
-	echo -e $TXT | write `whoami` $3  
+	echo $TXT | write `whoami` $3  
 fi
 
