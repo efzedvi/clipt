@@ -1,0 +1,127 @@
+.TH clipt 1 LOCAL
+.SH NAME
+clipt \- CLI Pomodoro Timer
+.SH SYNOPSIS
+.B clipt 
+.I [-c <command>]
+.br
+.B clipt 
+.I [<server options>]
+.br
+.SH DESCRIPTION
+.B clipt 
+is CLI (Command Line Interface) Pomodoro Timer. Although the name mentions command line, but
+it is flexible to be equipped with and support a GUI interface. It's a multi-user program
+that allows each user of the system have their own Pomodoro timer. To learn and know more about 
+Pomodoro Timer, you can refer to http://en.wikipedia.org/wiki/Pomodoro_Technique
+.P
+Running 
+.B clipt
+without any options ( or any options except -c ) enters it into the server mode, and becomes a daemon.
+While in this mode, it can be interacted with through its Unix Domain Socket interface.
+The daemon creates and listens the socket a called ".clipt.sock" under the user's home
+directory. It makes the socket only accessible by the user.
+Daemon settings can be saved in a file called ".clipt.rc" under user's home directory.
+These settings are loaded every time 
+.B clipt 
+runs. However, command line options take priority and override them.
+.P
+Passing -c (--command) to 
+.B clipt
+makes it the client to the daemon. Read on option -c below to know more about the 
+commands that can be sent to the daemon.
+.SH OPTIONS
+.IP "\fB-w, --work\fR minutes"
+Specifies duration of work period in minutes
+.IP "\fB-b, --break\fR minutes"
+Specifies duration of break period in minutes
+.IP "\fB-l, --long\fR minutes"
+Specifies duration of the long break period in minutes(
+.IP "\fB-a, --long_after\fR minutes"
+Number of pomodors (work periods) to run before taking a long break
+.IP "\fB-q, --quit\fR pomodoros"
+Number of pomodors to run before quitting
+.IP "\fB-r, --run\fR script"
+Specifies the full path name to the script that runs after each phase.
+It gets passed three arguments [w|b|l] (short for [work|break|long-break]),
+lenght of the pase in minutes, and ttyname.
+.IP "\fB-n, --nodaemon\fR"
+Do NOT become a daemon (default is to become a daemon)
+.IP "\fB-c, --cmd\fR command"
+Pass command to the running daemon. Here are the commands you can pass to the daemon:
+.B
+pause 
+(to pause the timer),
+.B
+resume
+(to resume a paused timer), 
+.B
+reset
+(restart from the current period),
+.B
+work
+(to start a work period), 
+.B
+break 
+(to start a break period), 
+.B
+status
+(shows the current status of the timer), and 
+.B
+quit
+(to make the daemon quit)
+.IP "\fB-h, --help\fR"
+Display the usage and help screen.
+.IP "\fB-v, --version\fR"
+Display the version number.
+.SH FILES
+Each user can save its settings into a file called .clipt.rc under their home directory.
+This file has a very simple format, where each setting is stored in its own line and
+key and values are separated by a white space, such as:
+.br
+.P
+work            25
+.br
+break           5
+.br
+long_break      10
+.br
+long_break_after 	4
+.br
+quit_after      16
+.br
+script  /home/fzv/src/clipt/samples/cliptnotify.sh
+.SH AVAILABILITY
+.B clipt
+is tested on many different variations of Linux, Cygwin (1.5.x), NetBSD 6.1, and FreeBSD 10.1.
+.P
+Please feel free to send us your patches to get tgc working on other platforms.
+.SH COPYRIGHT AND LEGAL ISSUES
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+.P
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.P
+Disclaimer:
+.P
+Pomodoro Technique(R) and Pomodoro(TM) are registered and filed trademarks owned by Francesco Cirillo.
+.B clipt 
+is not affiliated by, associated with nor endorsed by Francesco Cirillo.
+.P
+This program is provided with no warranty of any kind, either expressed or
+implied.  It is the responsibility of the user (you) to fully research and
+comprehend the usage of this program.  As with any tool, it can be misused,
+either intentionally or unintentionally.
+THE AUTHOR(S) IS(ARE) NOT RESPONSIBLE FOR ANYTHING YOU DO WITH THIS PROGRAM
+or anything that happens because of your use (or misuse) of this program.
+.SH AUTHOR
+.B clipt
+is written by Faraz.V (faraz@fzv.ca)
+

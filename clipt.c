@@ -40,7 +40,6 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define DEF_QUIT_AFTER		16
 
 #define	SOCKET_NAME		".clipt.sock"
-#define	CLIENT_SOCKET_NAME	".clipt_client.sock"
 #define CLIPT_RC_FILE		".clipt.rc"
 
 #define MAX_CMD_SIZE	16
@@ -105,7 +104,7 @@ void print_usage(int exit_code)
 
 	printf("Options are:\n\n");
 	
-	printf(" -w, --work  minutes	Specifies duration of work perios in minutes([%d-%d] default: %d)\n",
+	printf(" -w, --work  minutes	Specifies duration of work period in minutes([%d-%d] default: %d)\n",
 		WORK_LEN_MIN, WORK_LEN_MAX, WORK_LEN_DEF);
 	printf(" -b, --break minutes	Specifies duration of break period in minutes([%d-%d] default: %d)\n",
 		BREAK_LEN_MIN, BREAK_LEN_MAX, BREAK_LEN_DEF);
@@ -115,13 +114,13 @@ void print_usage(int exit_code)
 		DEF_LONG_BREAK_AFTER);
 	printf(" -q, --quit pomodoros	Number of pomodors to run before quitting(default: %d).\n",
 		DEF_QUIT_AFTER);
-	printf(" -r, --run script	Run the specified script after then of each phase\n");
+	printf(" -r, --run script	Run the specified script after then of each phase.\n");
 	printf("			It passes 3 arguments [w|b|l] (short for [work|break|long-break]),\n");
 	printf("			lenght of the pase in minutes, and ttyname.\n");
 	printf(" -n, --nodaemon		Do NOT become a daemon (default is to become a daemon)\n");
 	printf(" -c, --cmd command	Pass command to the running daemon.\n");
 	printf(" -h, --help		Display this.\n");
-	printf(" -v, --version		Display version number.\n\n");
+	printf(" -v, --version		Display the version number.\n\n");
 
 	printf("Pomodoro Technique(R) and Pomodoro(TM) are registered and filed trademarks owned by Francesco Cirillo.\nCLIPT is not affiliated by, associated with nor endorsed by Francesco Cirillo.\n\n");
 
