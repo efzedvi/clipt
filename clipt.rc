@@ -1,0 +1,6 @@
+work		25
+break		5
+long_break	15
+long_break_after	3
+quit_after	9
+script	/usr/local/bin/cliptnotify.sh
