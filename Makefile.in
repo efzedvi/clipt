@@ -33,10 +33,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = clipt$(EXEEXT)
 subdir = .
-DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	TODO depcomp install-sh missing
+DIST_COMMON = README $(am__configure_deps) $(dist_bin_SCRIPTS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/config.h.in $(top_srcdir)/configure AUTHORS COPYING \
+	ChangeLog INSTALL NEWS TODO depcomp install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -53,8 +53,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_clipt_OBJECTS = clipt.$(OBJEXT) utils.$(OBJEXT)
 clipt_OBJECTS = $(am_clipt_OBJECTS)
 clipt_LDADD = $(LDADD)
-binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
-SCRIPTS = $(bin_SCRIPTS)
+dist_binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
+SCRIPTS = $(dist_bin_SCRIPTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -168,7 +168,7 @@ top_srcdir = @top_srcdir@
 EXTRA_DIST = clipt.1
 clipt_SOURCES = clipt.c utils.c utils.h includes.h config.h
 man_MANS = clipt.1
-bin_SCRIPTS = cliptnotify.sh
+dist_bin_SCRIPTS = cliptnotify.sh
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -250,21 +250,21 @@ clean-binPROGRAMS:
 clipt$(EXEEXT): $(clipt_OBJECTS) $(clipt_DEPENDENCIES) 
 	@rm -f clipt$(EXEEXT)
 	$(LINK) $(clipt_OBJECTS) $(clipt_LDADD) $(LIBS)
-install-binSCRIPTS: $(bin_SCRIPTS)
+install-dist_binSCRIPTS: $(dist_bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
-	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	@list='$(dist_bin_SCRIPTS)'; for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  if test -f $$d$$p; then \
 	    f=`echo "$$p" | sed 's|^.*/||;$(transform)'`; \
-	    echo " $(binSCRIPT_INSTALL) '$$d$$p' '$(DESTDIR)$(bindir)/$$f'"; \
-	    $(binSCRIPT_INSTALL) "$$d$$p" "$(DESTDIR)$(bindir)/$$f"; \
+	    echo " $(dist_binSCRIPT_INSTALL) '$$d$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	    $(dist_binSCRIPT_INSTALL) "$$d$$p" "$(DESTDIR)$(bindir)/$$f"; \
 	  else :; fi; \
 	done
 
-uninstall-binSCRIPTS:
+uninstall-dist_binSCRIPTS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	@list='$(dist_bin_SCRIPTS)'; for p in $$list; do \
 	  f=`echo "$$p" | sed 's|^.*/||;$(transform)'`; \
 	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
@@ -572,7 +572,7 @@ install-data-am: install-man
 
 install-dvi: install-dvi-am
 
-install-exec-am: install-binPROGRAMS install-binSCRIPTS
+install-exec-am: install-binPROGRAMS install-dist_binSCRIPTS
 
 install-html: install-html-am
 
@@ -605,7 +605,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS uninstall-man
+uninstall-am: uninstall-binPROGRAMS uninstall-dist_binSCRIPTS \
+	uninstall-man
 
 uninstall-man: uninstall-man1
 
@@ -617,16 +618,16 @@ uninstall-man: uninstall-man1
 	distclean distclean-compile distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-binSCRIPTS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-man1 install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS uninstall-binSCRIPTS \
-	uninstall-man uninstall-man1
+	install-binPROGRAMS install-data install-data-am \
+	install-dist_binSCRIPTS install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-man1 \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-dist_binSCRIPTS uninstall-man uninstall-man1
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
