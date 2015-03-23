@@ -24,25 +24,46 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <time.h>
 #include <signal.h>
 #include <errno.h>
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h> 
+#endif
 #include <pwd.h> 
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_ASM_TYPES_H
 #include <asm/types.h> 
+#endif
+#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#include <sys/ioctl.h>
+#endif
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+#ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
+#endif
+#ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
+#endif
+#ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
+#endif
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
 #include <getopt.h>
 #include <assert.h>
+#ifdef HAVE_BITS_SOCKADDR_H 
 #include <bits/sockaddr.h>
+#endif
 #include <netdb.h>
+#ifdef HAVE_STRING_H
 #include <string.h>
+#endif
 
 #include <sys/un.h>
 

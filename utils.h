@@ -38,7 +38,6 @@ int	strnum(char *s);
 char 	*chomp(char *s);
 int 	read_data(int fd, unsigned char *buf, unsigned int len);
 int 	read_line(int fd, unsigned char *buf, unsigned int len);
-int	read_timeout(int fd, unsigned char *buf, unsigned int len, unsigned short timeout);
 int 	parse_host(char *hostport, char *host, unsigned short *port);
 int 	connect_server(const char *sock_path);
 int	open_server_socket(const char *sock_path);

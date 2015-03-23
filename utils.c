@@ -119,31 +119,6 @@ int tval_sub( struct timeval *retval, struct timeval *val1, struct timeval *val2
 /*-----------------------------------------------------------------
   read data from peer
 -----------------------------------------------------------------*/
-int read_timeout(int fd, unsigned char *buf, unsigned int len, unsigned short timeout)
-{
-        int    rc=0;
-	fd_set rfds;
-	struct timeval tv;
-	
-	if (fd < 0 || len<=0) return 0;
-	if (buf == NULL) return -1;
-
-	FD_ZERO(&rfds);
-	FD_SET(fd, &rfds);
-
-	tv.tv_sec = timeout;
-	tv.tv_usec = 0;
-
-	rc = select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
-
-	if (rc <=0 ) return rc;
-
-	return read(fd, buf, len);
-}
-
-/*-----------------------------------------------------------------
-  read data from peer
------------------------------------------------------------------*/
 int read_data(int fd, unsigned char *buf, unsigned int len)
 {
         int  nread=0;
