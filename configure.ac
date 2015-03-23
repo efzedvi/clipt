@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.63])
 AC_INIT(clipt, 1.0.1, faraz@fzv.ca)
-AM_INIT_AUTOMAKE(1.10)
+AM_INIT_AUTOMAKE(clipt, 1.0.1)
 AC_CONFIG_SRCDIR([utils.c])
 AC_CONFIG_HEADERS([config.h])
 
