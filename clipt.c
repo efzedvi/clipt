@@ -500,10 +500,7 @@ int main(int argc,char *argv[])
 	extern	char 	*optarg;	/* getopt */
 	extern  int  	optind;	/* getopt */
 	struct stat 	script_stat;
-	char            cmd[MAX_CMD_SIZE+1] = { '\0' } ;
-
-	clipt_init(&cfg);
-	clipt_load_rc(&cfg);
+	char            cmd[MAX_CMD_SIZE+1] = { '\0' };
 
 	/* short options */
 	const char *short_options = "w:b:r:c:nhv";
@@ -523,7 +520,8 @@ int main(int argc,char *argv[])
 		{NULL, 		0, NULL, 0}
 	};
 
-	// TODO: read the config file
+	clipt_init(&cfg);
+	clipt_load_rc(&cfg);
 
 	do {
 		next_option = getopt_long(argc, argv, short_options, long_options, NULL);

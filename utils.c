@@ -95,28 +95,6 @@ char *chomp(char *s)
 }
 
 /*-----------------------------------------------------------------
- Calculate the difference in timeout values. Return 1 if val1 > val2,
- 0 if val1 == val2, -1 if val1 < val2. Stores result in retval. retval
- may be == val1 or val2
------------------------------------------------------------------*/
-int tval_sub( struct timeval *retval, struct timeval *val1, struct timeval *val2)
-{
-	long usecdiff = val1->tv_usec - val2->tv_usec;
-	long secdiff = val1->tv_sec - val2->tv_sec;
-	if(usecdiff < 0) {
-		usecdiff = 1000000 + usecdiff;
-		secdiff--;
-	}
-	retval->tv_sec = secdiff;
-	retval->tv_usec = usecdiff;
-	if(secdiff < 0)
-		return -1;
-	if(secdiff > 0)
-		return 1;
-	return (usecdiff < 0 ) ? -1 : ((usecdiff > 0 ) ? 1 : 0);
-}
-
-/*-----------------------------------------------------------------
   read data from peer
 -----------------------------------------------------------------*/
 int read_data(int fd, unsigned char *buf, unsigned int len)
