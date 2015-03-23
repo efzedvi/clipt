@@ -182,8 +182,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[WORK]) {
 		n = atoi(rc[WORK]);
 		if (!strnum(rc[WORK]) || n<WORK_LEN_MIN || n>WORK_LEN_MAX) {
-			fprintf(stderr, "Invalid work length '%s' in rc file\n", optarg);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid work length '%s' in rc file, setting to default\n", optarg);
+			n = WORK_LEN_DEF;
 		}
 		cfg->work_len = n;
 	}
@@ -191,8 +191,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[BREAK]) {
 		n = atoi(rc[BREAK]);
 		if (!strnum(rc[BREAK]) || n<BREAK_LEN_MIN || n>BREAK_LEN_MAX) {
-			fprintf(stderr, "Invalid break length '%s' in rc file\n", optarg);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid break length '%s' in rc file, setting to default\n", optarg);
+			n = BREAK_LEN_DEF;
 		}
 		cfg->break_len = n;
 	}
@@ -200,8 +200,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[LONG]) {
 		n = atoi(rc[LONG]);
 		if (!strnum(rc[LONG]) || n<LONG_BREAK_LEN_MIN || n>LONG_BREAK_LEN_MAX) {
-			fprintf(stderr, "Invalid long break length '%s' in rc file\n", optarg);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid long break length '%s' in rc file, setting to default\n", optarg);
+			n = LONG_BREAK_LEN_DEF;
 		}
 		cfg->long_break_len = n;
 	}
@@ -209,8 +209,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[LONG_AFTER]) {
 		n = atoi(rc[LONG_AFTER]);
 		if (!strnum(rc[LONG_AFTER]) || n<=0) {
-			fprintf(stderr, "Invalid value for long_after '%s' in rc file\n", optarg);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid value for long_after '%s' in rc file, setting to zero\n", optarg);
+			n = 0;
 		}
 		cfg->long_break_after = n;
 	}
@@ -218,8 +218,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[QUIT_AFTER]) {
 		n = atoi(rc[QUIT_AFTER]);
 		if (!strnum(rc[QUIT_AFTER]) || n<=0) {
-			fprintf(stderr, "Invalid value for quit_after '%s' in rc file\n", optarg);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid value for quit_after '%s' in rc file, setting to zero\n", optarg);
+			n = 0;
 		}
 		cfg->quit_after = n;
 	}
@@ -228,8 +228,8 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 		rv = stat(rc[SCRIPT], &script_stat);
 		if (rv || !S_ISREG(script_stat.st_mode) ||
 		    access((const char *) rc[SCRIPT], X_OK)) {
-			fprintf(stderr, "Invalid script '%s' in rc file\n", rc[SCRIPT]);
-			exit(2);
+			fprintf(stderr, "Warning: Invalid script '%s' in rc file\n", rc[SCRIPT]);
+			rc[SCRIPT][0] = '\0';
 		}
 		strncpy(cfg->script, rc[SCRIPT], MAX_PATH);
 		cfg->script[MAX_PATH] = '\0';
@@ -256,7 +256,7 @@ void clipt_alarm(int signum)
 	} else { // END OF WORK_PHASE
 		cfg.pomodoros++;
 		if (cfg.pomodoros < cfg.quit_after || cfg.quit_after == 0) { 
-			if (cfg.pomodoros % cfg.long_break_after == 0) {
+			if ( cfg.long_break_after && (cfg.pomodoros % cfg.long_break_after == 0)) {
 				cfg.current_phase = LONG_BREAK_PHASE;
 				phase = "l";
 				len = cfg.long_break_len;
@@ -531,51 +531,51 @@ int main(int argc,char *argv[])
 			case 'w':
 				n = atoi(optarg);
 				if (!strnum(optarg) || n<WORK_LEN_MIN || n>WORK_LEN_MAX) {
-					fprintf(stderr, "Invalid work length '%s'\n", optarg);
-					exit(2);
+					fprintf(stderr, "Warning : Invalid work length argument '%s'\n", optarg);
+				} else {
+					cfg.work_len = n;
 				}
-				cfg.work_len = n;
 				break;
 			case 'b':
 				n = atoi(optarg);
 				if (!strnum(optarg) || n<BREAK_LEN_MIN || n>BREAK_LEN_MAX) {
-					fprintf(stderr, "Invalid break length '%s'\n", optarg);
-					exit(2);
+					fprintf(stderr, "Warning: Invalid break length argument '%s'\n", optarg);
+				} else {
+					cfg.break_len = n;
 				}
-				cfg.break_len = n;
 				break;
 			case 'l':
 				n = atoi(optarg);
 				if (!strnum(optarg) || n<LONG_BREAK_LEN_MIN || n>LONG_BREAK_LEN_MAX) {
-					fprintf(stderr, "Invalid long break length '%s'\n", optarg);
-					exit(2);
+					fprintf(stderr, "Warning: Invalid long break length argument '%s'\n", optarg);
+				} else {
+					cfg.long_break_len = n;
 				}
-				cfg.long_break_len = n;
 				break;
 			case 'a':
 				n = atoi(optarg);
 				if (!strnum(optarg) || n<=0) {
-					fprintf(stderr, "Invalid value for length_break_after '%s'\n", optarg);
-					exit(2);
+					fprintf(stderr, "Warning: Invalid value for length_break_after argument '%s'\n", optarg);
+				} else {
+					cfg.long_break_after = n;
 				}
-				cfg.long_break_after = n;
 				break;
 			case 'q':
 				n = atoi(optarg);
 				if (!strnum(optarg) || n<=0) {
-					fprintf(stderr, "Invalid value for quit parameter '%s'\n", optarg);
-					exit(2);
+					fprintf(stderr, "Warning: Invalid value for quit parameter argument '%s'\n", optarg);
+				} else {
+					cfg.quit_after= n;
 				}
-				cfg.quit_after= n;
 				break;
 			case 'r':
-				strncpy(cfg.script, optarg, MAX_PATH);
-				cfg.script[MAX_PATH] = '\0';
 				rc = stat(cfg.script, &script_stat);
-				if (rc || !S_ISREG(script_stat.st_mode) || 
-				    access((const char *) cfg.script, X_OK)) {
-					fprintf(stderr, "Invalid script '%s'\n", optarg);
-					exit(2);
+				if (rc || !S_ISREG(script_stat.st_mode) || access((const char *) cfg.script, X_OK)) {
+					fprintf(stderr, "Warning: Invalid script argument '%s'\n", optarg);
+					cfg.script[0] = '\0';
+				} else {
+					strncpy(cfg.script, optarg, MAX_PATH);
+					cfg.script[MAX_PATH] = '\0';
 				}
 				break;
 			case 'c':
