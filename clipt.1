@@ -10,25 +10,25 @@ clipt \- CLI Pomodoro Timer
 .br
 .SH DESCRIPTION
 .B clipt 
-is CLI (Command Line Interface) Pomodoro Timer. Although the name mentions command line, but
-it is flexible to be equipped with and support a GUI interface. It's a multi-user program
-that allows each user of the system have their own Pomodoro timer. To learn and know more about 
-Pomodoro Timer, you can refer to http://en.wikipedia.org/wiki/Pomodoro_Technique
+is CLI (Command Line Interface) Pomodoro Timer. Although the name mentions command line, 
+it is flexible enough to be equipped with and support a GUI. It's a multi-user program
+that allows every user of the system have their own Pomodoro timer. To learn more about 
+Pomodoro Timer, refer to http://en.wikipedia.org/wiki/Pomodoro_Technique
 .P
 Running 
 .B clipt
-without any options ( or any options except -c ) enters it into the server mode, and becomes a daemon.
-While in this mode, it can be interacted with through its Unix Domain Socket interface.
-The daemon creates and listens the socket a called ".clipt.sock" under the user's home
-directory. It makes the socket only accessible by the user.
-Daemon settings can be saved in a file called ".clipt.rc" under user's home directory.
+without any options ( or any options except -c ) enters it into server mode, where it becomes a daemon.
+While in server mode, it can be interacted with through its Unix Domain Socket interface.
+The daemon creates and listens on a socket called ".clipt.sock" under the user's home
+directory. It makes the socket accessible only by the user.
+Daemon settings can be saved in a file called ".clipt.rc" under the user's home directory.
 These settings are loaded every time 
 .B clipt 
 runs. However, command line options take priority and override them.
 .P
 Passing -c (--command) to 
 .B clipt
-makes it the client to the daemon. Read on option -c below to know more about the 
+makes it the client to the daemon. Refer to option -c below to learn more about the 
 commands that can be sent to the daemon.
 .SH OPTIONS
 .IP "\fB-w, --work\fR minutes"
@@ -42,13 +42,13 @@ Number of pomodors (work periods) to run before taking a long break
 .IP "\fB-q, --quit\fR pomodoros"
 Number of pomodors to run before quitting
 .IP "\fB-r, --run\fR script"
-Specifies the full path name to the script that runs after each phase.
-It gets passed three arguments [w|b|l] (short for [work|break|long-break]),
-lenght of the pase in minutes, and ttyname.
+Specifies the full path to the script that runs after each phase.
+It gets passed three arguments [w|b|l] ([work|break|long-break]),
+length of the period in minutes, and ttyname.
 .IP "\fB-n, --nodaemon\fR"
 Do NOT become a daemon (default is to become a daemon)
 .IP "\fB-c, --cmd\fR command"
-Pass command to the running daemon. Here are the commands you can pass to the daemon:
+Pass the command to the running daemon. Here are the commands you can pass to the daemon:
 .B
 pause 
 (to pause the timer),
@@ -66,7 +66,7 @@ break
 (to start a break period), 
 .B
 status
-(shows the current status of the timer), and 
+(shows the current status of the timer),
 .B
 quit
 (to make the daemon quit)
@@ -75,7 +75,7 @@ Display the usage and help screen.
 .IP "\fB-v, --version\fR"
 Display the version number.
 .SH FILES
-Each user can save its settings into a file called .clipt.rc under their home directory.
+Each user can save their settings into a file called .clipt.rc under their home directory.
 This file has a very simple format, where each setting is stored in its own line and
 key and values are separated by a white space, such as:
 .br
