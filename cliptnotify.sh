@@ -37,6 +37,6 @@ else
 	mesg y
 	
 	TXT="----------\n$TXT\n----------";
-	echo $TXT | write `whoami` $3  
+	echo $TXT | write `whoami` $TTYNAME
 fi
 
