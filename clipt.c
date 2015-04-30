@@ -144,6 +144,7 @@ RETSIGTYPE shutdown_server(int sig)
 void init_server(CLIPT_CFG *cfg)
 {
 	signal(SIGPIPE, SIG_IGN);
+	signal(SIGCHLD, SIG_IGN); // to avoid zombie process
 
 	signal(SIGTERM, shutdown_server);
 	signal(SIGINT, shutdown_server);
