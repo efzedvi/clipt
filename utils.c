@@ -256,11 +256,11 @@ char** read_cfg(const char *filename, char *keys[])
 		line[MAX_LINE_SIZE-1] = '\0';
 		i = strlen(line)-1; 
 		if (i<0) continue;
-		if (line[strlen(line)-1] != '\n' || line[0] == '#' || line[0] == '\b' || line[0] == '\t') {
-			// skip the linke or the rest
+		if (line[i] != '\n' || line[0] == '#' || line[0] == '\b' || line[0] == '\t') {
+			// skip the line or the rest
 			do {
 				ch = fgetc(fp);
-			} while (ch != '\n' || ch != EOF);
+			} while (ch != '\n' && ch != EOF);
 			if (line[0] == '#' || line[0] == '\b' || line[0] == '\t')
 				continue;
 		} else {
