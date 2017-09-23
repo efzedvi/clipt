@@ -183,7 +183,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[WORK]) {
 		n = atoi(rc[WORK]);
 		if (!strnum(rc[WORK]) || n<WORK_LEN_MIN || n>WORK_LEN_MAX) {
-			fprintf(stderr, "Warning: Invalid work length '%s' in rc file, setting to default\n", n);
+			fprintf(stderr, "Warning: Invalid work length '%d' in rc file, setting to default\n", n);
 			n = WORK_LEN_DEF;
 		}
 		cfg->work_len = n;
@@ -192,7 +192,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[BREAK]) {
 		n = atoi(rc[BREAK]);
 		if (!strnum(rc[BREAK]) || n<BREAK_LEN_MIN || n>BREAK_LEN_MAX) {
-			fprintf(stderr, "Warning: Invalid break length '%s' in rc file, setting to default\n", n);
+			fprintf(stderr, "Warning: Invalid break length '%d' in rc file, setting to default\n", n);
 			n = BREAK_LEN_DEF;
 		}
 		cfg->break_len = n;
@@ -201,7 +201,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[LONG]) {
 		n = atoi(rc[LONG]);
 		if (!strnum(rc[LONG]) || n<LONG_BREAK_LEN_MIN || n>LONG_BREAK_LEN_MAX) {
-			fprintf(stderr, "Warning: Invalid long break length '%s' in rc file, setting to default\n", n);
+			fprintf(stderr, "Warning: Invalid long break length '%d' in rc file, setting to default\n", n);
 			n = LONG_BREAK_LEN_DEF;
 		}
 		cfg->long_break_len = n;
@@ -210,7 +210,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[LONG_AFTER]) {
 		n = atoi(rc[LONG_AFTER]);
 		if (!strnum(rc[LONG_AFTER]) || n<=0) {
-			fprintf(stderr, "Warning: Invalid value for long_after '%s' in rc file, setting to zero\n", n);
+			fprintf(stderr, "Warning: Invalid value for long_after '%d' in rc file, setting to zero\n", n);
 			n = 0;
 		}
 		cfg->long_break_after = n;
@@ -219,7 +219,7 @@ int clipt_load_rc(CLIPT_CFG *cfg)
 	if (rc[QUIT_AFTER]) {
 		n = atoi(rc[QUIT_AFTER]);
 		if (!strnum(rc[QUIT_AFTER]) || n<=0) {
-			fprintf(stderr, "Warning: Invalid value for quit_after '%s' in rc file, setting to zero\n", n);
+			fprintf(stderr, "Warning: Invalid value for quit_after '%d' in rc file, setting to zero\n", n);
 			n = 0;
 		}
 		cfg->quit_after = n;
